@@ -4,9 +4,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { ClarityModule } from '@clr/angular';
+import { loadIcons } from './clarity-icons';
 
 import { AppComponent } from './app.component';
 
+loadIcons();
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -14,6 +17,7 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes),
+    ClarityModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
