@@ -8,7 +8,6 @@ import {
   ClrNavigationModule,
   ClrVerticalNavModule,
 } from '@clr/angular';
-import { CdsBreadcrumbModule } from '@cds/angular';
 
 @Component({
   selector: 'app-shell',
@@ -22,7 +21,6 @@ import { CdsBreadcrumbModule } from '@cds/angular';
     RouterLinkActive,
     ClrVerticalNavModule,
     ClrDropdownModule,
-    CdsBreadcrumbModule,
     ClrNavigationModule,
     ClrLayoutModule,
   ],
