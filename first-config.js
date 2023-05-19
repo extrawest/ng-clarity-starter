@@ -29,13 +29,11 @@ const completeScript = () => {
   let packageJsonLines = packageJson.split('\n');
   packageJsonLines = packageJsonLines.map((line) => {
     if (line.includes('node first-config.js')) {
-      console.log('replacing line in package.json...');
       return line.replace('node first-config.js', 'ng serve');
     }
 
-    return line + '\n';
+    return line ? line + '\n' : line;
   });
-  console.log(packageJsonLines);
   fs.writeFileSync('package.json', packageJsonLines.join(''));
 
   // Commit changes
@@ -76,17 +74,19 @@ rl.question(
 
     // Add GA to main.ts
     const mainTs = fs.readFileSync('src/main.ts', 'utf8');
-    let mainTsLines = mainTs.split('\r');
+    let mainTsLines = mainTs.split('\n');
+    console.log(mainTsLines);
     mainTsLines = mainTsLines.map((line) => {
       if (line.includes('import { appRoutes }')) {
-        return `${line}\nimport { GoogleAnalyticsModule } from 'ngx-google-analytics';\r`;
+        return `${line}\nimport { NgxGoogleAnalyticsModule } from 'ngx-google-analytics';\n`;
       }
 
       if (line.includes('importProvidersFrom(BrowserModule)')) {
-        return `${line}\n    importProvidersFrom(NgxGoogleAnalyticsModule.forRoot('${answer}')),\r`;
+        console.log('replacing line in main.ts...');
+        return `${line}\n    importProvidersFrom(NgxGoogleAnalyticsModule.forRoot('${answer}')),\n`;
       }
 
-      return line + '\n';
+      return line ? line + '\n' : line;
     });
     fs.writeFileSync(path.join(__dirname, 'src', 'main.ts'), mainTsLines.join(''), { flag: 'r+' });
 
