@@ -8,22 +8,10 @@ import {
   user,
   signOut,
   authState,
-  UserCredential,
   User,
   updateProfile,
 } from '@angular/fire/auth';
-import {
-  catchError,
-  concatMap,
-  filter,
-  from,
-  map,
-  Observable,
-  shareReplay,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { Router } from '@angular/router';
+import { catchError, concatMap, filter, from, map, Observable, shareReplay, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +19,7 @@ import { Router } from '@angular/router';
 export class UserService {
   public user$: Observable<User | null>;
 
-  constructor(private auth: Auth, private router: Router) {
+  constructor(private auth: Auth) {
     this.user$ = user(this.auth).pipe(shareReplay(1));
   }
 
