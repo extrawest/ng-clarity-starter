@@ -12,7 +12,17 @@ import {
   User,
   updateProfile,
 } from '@angular/fire/auth';
-import { concatMap, from, Observable, shareReplay } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  filter,
+  from,
+  map,
+  Observable,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -25,34 +35,31 @@ export class UserService {
     this.user$ = user(this.auth).pipe(shareReplay(1));
   }
 
-  public signInWithGoogle() {
-    return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((result) => {
-        this.handleAuthSuccess(result);
-      })
-      .catch((error) => {
+  public signInWithGoogle(): Observable<User> {
+    return from(signInWithPopup(this.auth, new GoogleAuthProvider())).pipe(
+      catchError((error) => {
         throw new Error(error.message);
-      });
+      }),
+      switchMap(() => this.handleAuthSuccess())
+    );
   }
 
-  public signInWithGitHub() {
-    return signInWithPopup(this.auth, new GithubAuthProvider())
-      .then((result) => {
-        this.handleAuthSuccess(result);
-      })
-      .catch((error) => {
+  public signInWithGitHub(): Observable<User> {
+    return from(signInWithPopup(this.auth, new GithubAuthProvider())).pipe(
+      catchError((error) => {
         throw new Error(error.message);
-      });
+      }),
+      switchMap(() => this.handleAuthSuccess())
+    );
   }
 
-  public login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password)
-      .then((result) => {
-        this.handleAuthSuccess(result);
-      })
-      .catch((error) => {
+  public login(email: string, password: string): Observable<User> {
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      catchError((error) => {
         throw new Error(error.message);
-      });
+      }),
+      switchMap(() => this.handleAuthSuccess())
+    );
   }
 
   public updateUser(user: Partial<User>): Observable<void> {
@@ -68,17 +75,15 @@ export class UserService {
     );
   }
 
-  public async logout($event?: Event) {
+  public logout($event?: Event): Observable<void> {
     if ($event) $event.preventDefault();
-
-    await signOut(this.auth);
-
-    await this.router.navigateByUrl('/login');
+    return from(signOut(this.auth));
   }
 
-  private handleAuthSuccess(result: UserCredential): void {
-    authState(this.auth).subscribe((user) => {
-      if (user) this.router.navigate(['/']);
-    });
+  private handleAuthSuccess(): Observable<User> {
+    return authState(this.auth).pipe(
+      filter((user) => !!user),
+      map((user) => user as User)
+    );
   }
 }

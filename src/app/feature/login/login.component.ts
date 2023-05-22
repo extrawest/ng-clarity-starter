@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { ClrFormsModule, ClrIconModule } from '@clr/angular';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -15,7 +16,7 @@ export class LoginComponent {
   public loginForm: FormGroup;
   public error = '';
 
-  constructor(private readonly userService: UserService) {
+  constructor(private readonly userService: UserService, private readonly router: Router) {
     this.loginForm = new FormGroup({
       username: new FormControl(''),
       password: new FormControl(''),
@@ -24,10 +25,14 @@ export class LoginComponent {
   }
 
   loginWithGoogle() {
-    this.userService.signInWithGoogle();
+    this.userService.signInWithGoogle().subscribe(() => {
+      this.router.navigateByUrl('/');
+    });
   }
 
   loginWithGithub() {
-    this.userService.signInWithGitHub();
+    this.userService.signInWithGitHub().subscribe(() => {
+      this.router.navigateByUrl('/');
+    });
   }
 }

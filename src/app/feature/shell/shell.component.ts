@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   ClrDropdownModule,
   ClrLayoutModule,
@@ -28,9 +28,11 @@ import {
 export class ShellComponent {
   public user$ = this.userService.user$;
 
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService, private readonly router: Router) {}
 
   public logout() {
-    this.userService.logout();
+    this.userService.logout().subscribe(() => {
+      this.router.navigateByUrl('/login');
+    });
   }
 }
