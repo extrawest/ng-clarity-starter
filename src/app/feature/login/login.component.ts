@@ -35,4 +35,10 @@ export class LoginComponent {
       this.router.navigateByUrl('/');
     });
   }
+
+  loginWithApple() {
+    this.userService.signInWithApple().subscribe(() => {
+      this.router.navigateByUrl('/');
+    });
+  }
 }

@@ -3,6 +3,7 @@ import {
   Auth,
   GoogleAuthProvider,
   GithubAuthProvider,
+  OAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
   user,
@@ -34,6 +35,18 @@ export class UserService {
 
   public signInWithGitHub(): Observable<User> {
     return from(signInWithPopup(this.auth, new GithubAuthProvider())).pipe(
+      catchError((error) => {
+        throw new Error(error.message);
+      }),
+      switchMap(() => this.handleAuthSuccess())
+    );
+  }
+
+  public signInWithApple(): Observable<User> {
+    const provider = new OAuthProvider('apple.com');
+    provider.addScope('email');
+    provider.addScope('name');
+    return from(signInWithPopup(this.auth, provider)).pipe(
       catchError((error) => {
         throw new Error(error.message);
       }),
