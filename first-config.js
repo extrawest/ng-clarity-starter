@@ -126,7 +126,7 @@ const configureSignInMethods = (authMethods) => {
   let loginTemplateLines = loginTemplate.split('\n');
   loginTemplateLines = loginTemplateLines.map((line, index) => {
     if (line.includes('login-group') && !authMethods.includes('email')) {
-      commentOutNextFewLines(loginTemplateLines, index + 1, 32);
+      commentOutNextFewLines(loginTemplateLines, index + 1, 24);
     }
 
     if (line.includes('signInWithGoogle()') && !authMethods.includes('google')) {
@@ -150,7 +150,7 @@ const configureSignInMethods = (authMethods) => {
 
 const commentOutNextFewLines = (lines, lineIndex, numberOfLines) => {
   for (let i = lineIndex; i < lineIndex + numberOfLines; i++) {
-    lines[i] = `<!-- ${lines[i]} -->`;
+    lines[i] = `<!-- ${lines[i].slice(0, lines[i].length - 1)} -->\n`;
   }
 };
 
