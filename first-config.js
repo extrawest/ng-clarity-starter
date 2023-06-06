@@ -143,6 +143,9 @@ const configureSignInMethods = (authMethods) => {
 
     return line ? line + '\n' : line;
   });
+  fs.writeFileSync('src/app/feature/login/login.component.html', loginTemplateLines.join(''), {
+    flag: 'r+',
+  });
 };
 
 const commentOutNextFewLines = (lines, lineIndex, numberOfLines) => {
