@@ -6,86 +6,6 @@ const path = require('path');
 const REQUIRED_NODEJS_MAJOR_VERSION = 'v18';
 const GA_REGEX = new RegExp(/G-[A-Z0-9]+/);
 
-(function main() {
-  if (process.version.split('.')[0] !== REQUIRED_NODEJS_MAJOR_VERSION) {
-    console.log(`Error! Please install Node.js ${REQUIRED_NODEJS_MAJOR_VERSION}!`);
-    process.exit(1);
-  }
-
-  // Remove config dirs
-  removeDir('.vscode');
-  removeDir('.idea');
-  removeDir('.angular');
-
-  // Install modules
-  executeCommandInTerminal('npm install');
-
-  // Remove current git dir
-  removeDir('.git');
-
-  // Convert everything to LF
-  convertToLF();
-
-  inquirer
-    .prompt([
-      {
-        type: 'input',
-        name: 'projectName',
-        message: 'Choose the fancy name for your project (ex.: My Awesome Project)',
-      },
-      {
-        type: 'input',
-        name: 'gaId',
-        message:
-          'Do you want to use Google Analytics for this project? If so, paste here your Google Analytics ID (ex.: G-12345678)',
-        validate: (value) => {
-          if (!value || !GA_REGEX.test(value)) {
-            return 'Please enter a valid Google Analytics ID (ex.: G-12345678)';
-          }
-
-          return true;
-        },
-      },
-      // {
-      //   type: 'confirm',
-      //   name: 'useFirebase',
-      //   message: 'Do you want to use Firebase for this project?',
-      // },
-      {
-        type: 'checkbox',
-        name: 'authMethods',
-        message: 'What authentication methods do you want to use?',
-        choices: [
-          {
-            name: 'Email',
-            value: 'email',
-          },
-          {
-            name: 'Google',
-            value: 'google',
-          },
-          {
-            name: 'GitHub',
-            value: 'github',
-          },
-          {
-            name: 'Apple',
-            value: 'apple',
-          },
-        ],
-      },
-    ])
-    .then((answers) => {
-      replaceProjectName(answers.projectName);
-
-      if (answers.gaId) addGoogleAnalytics(answers.gaId);
-
-      if (answers.authMethods.length > 0) configureSignInMethods(answers.authMethods);
-
-      completeScript();
-    });
-})();
-
 const executeCommandInTerminal = (command) => {
   console.log(`Executing ${command}...`);
 
@@ -96,19 +16,6 @@ const removeDir = (path) => {
   console.log(`Removing ${path}...`);
 
   fs.rmSync(path, { recursive: true, force: true });
-};
-
-const convertToLF = () => {
-  console.log('Converting all files to LF...');
-
-  const files = fs.readdirSync('.');
-  files.forEach((file) => {
-    if (file !== 'first-config.js') {
-      const fileContent = fs.readFileSync(file, 'utf8');
-      const fileContentLines = fileContent.split('\n');
-      fs.writeFileSync(file, fileContentLines.join('\n'));
-    }
-  });
 };
 
 const completeScript = () => {
@@ -214,4 +121,109 @@ const addGoogleAnalytics = (gaId) => {
   fs.writeFileSync(path.join(__dirname, 'src', 'main.ts'), mainTsLines.join(''), { flag: 'r+' });
 };
 
-const configureSignInMethods = (authMethods) => {};
+const configureSignInMethods = (authMethods) => {
+  let loginTemplate = fs.readFileSync('src/app/feature/login/login.component.html', 'utf8');
+  let loginTemplateLines = loginTemplate.split('\n');
+  loginTemplateLines = loginTemplateLines.map((line, index) => {
+    if (line.includes('login-group') && !authMethods.includes('email')) {
+      commentOutNextFewLines(loginTemplateLines, index + 1, 32);
+    }
+
+    if (line.includes('signInWithGoogle()') && !authMethods.includes('google')) {
+      commentOutNextFewLines(loginTemplateLines, index, 4);
+    }
+
+    if (line.includes('signInWithGithub()') && !authMethods.includes('github')) {
+      commentOutNextFewLines(loginTemplateLines, index, 4);
+    }
+
+    if (line.includes('signInWithApple()') && !authMethods.includes('apple')) {
+      commentOutNextFewLines(loginTemplateLines, index, 4);
+    }
+
+    return line ? line + '\n' : line;
+  });
+};
+
+const commentOutNextFewLines = (lines, lineIndex, numberOfLines) => {
+  for (let i = lineIndex; i < lineIndex + numberOfLines; i++) {
+    lines[i] = `<!-- ${lines[i]} -->`;
+  }
+};
+
+(function main() {
+  if (process.version.split('.')[0] !== REQUIRED_NODEJS_MAJOR_VERSION) {
+    console.log(`Error! Please install Node.js ${REQUIRED_NODEJS_MAJOR_VERSION}!`);
+    process.exit(1);
+  }
+
+  // Remove config dirs
+  removeDir('.vscode');
+  removeDir('.idea');
+  removeDir('.angular');
+
+  // Install modules
+  executeCommandInTerminal('npm install');
+
+  // Remove current git dir
+  removeDir('.git');
+
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'projectName',
+        message: 'Choose the fancy name for your project (ex.: My Awesome Project)',
+      },
+      {
+        type: 'input',
+        name: 'gaId',
+        message:
+          'Do you want to use Google Analytics for this project? If so, paste here your Google Analytics ID (ex.: G-12345678)',
+        validate: (value) => {
+          if (!value || !GA_REGEX.test(value)) {
+            return 'Please enter a valid Google Analytics ID (ex.: G-12345678)';
+          }
+
+          return true;
+        },
+      },
+      // {
+      //   type: 'confirm',
+      //   name: 'useFirebase',
+      //   message: 'Do you want to use Firebase for this project?',
+      // },
+      {
+        type: 'checkbox',
+        name: 'authMethods',
+        message: 'What authentication methods do you want to use?',
+        choices: [
+          {
+            name: 'Email',
+            value: 'email',
+          },
+          {
+            name: 'Google',
+            value: 'google',
+          },
+          {
+            name: 'GitHub',
+            value: 'github',
+          },
+          {
+            name: 'Apple',
+            value: 'apple',
+          },
+        ],
+      },
+    ])
+    .then((answers) => {
+      replaceProjectName(answers.projectName);
+
+      if (answers.gaId) addGoogleAnalytics(answers.gaId);
+
+      if (answers.authMethods.length > 0) configureSignInMethods(answers.authMethods);
+
+      completeScript();
+    });
+})();
