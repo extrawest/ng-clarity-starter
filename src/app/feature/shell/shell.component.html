@@ -9,14 +9,17 @@
     <div class="header-actions">
       <clr-dropdown>
         <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
-          <span id="user-name">{{(user$ | async)?.displayName || ''}}</span>
-          <img *ngIf="(user$ | async)?.photoURL" class="avatar" [src]="(user$ | async)?.photoURL" alt="avatar" />
+          <span id="user-name">{{ (user$ | async)?.displayName || '' }}</span>
+          <img
+            *ngIf="(user$ | async)?.photoURL"
+            class="avatar"
+            [src]="(user$ | async)?.photoURL"
+            alt="avatar"
+          />
           <cds-icon shape="angle" direction="down"></cds-icon>
         </button>
         <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-          <a clrDropdownItem>
-            Preferences
-          </a>
+          <a clrDropdownItem> Preferences </a>
           <a clrDropdownItem (click)="logout()">Log out</a>
         </clr-dropdown-menu>
       </clr-dropdown>

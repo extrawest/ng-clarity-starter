@@ -27,16 +27,9 @@
       </clr-password-container>
       <clr-checkbox-wrapper>
         <label>Remember me</label>
-        <input
-          type="checkbox"
-          name="rememberMe"
-          clrCheckbox
-          formControlName="rememberMe"
-        />
+        <input type="checkbox" name="rememberMe" clrCheckbox formControlName="rememberMe" />
       </clr-checkbox-wrapper>
-      <div class="error active" *ngIf="error">
-        Invalid user name or password
-      </div>
+      <div class="error active" *ngIf="error">Invalid user name or password</div>
       <button class="btn btn-primary" type="submit">LOG IN</button>
       <button class="btn btn-primary" (click)="loginWithGoogle()" type="button">
         <cds-icon shape="google"></cds-icon>

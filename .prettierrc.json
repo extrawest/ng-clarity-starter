@@ -4,6 +4,7 @@
   "bracketSameLine": false,
   "bracketSpacing": true,
   "semi": true,
+  "endOfLine": "lf",
   "overrides": [
     {
       "files": "*.scss",

@@ -17,7 +17,9 @@
 }
 
 @media screen and (min-width: 0px) and (max-width: 720px) {
-  #user-name { display: none; }
+  #user-name {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 0px) and (max-width: 576px) {

@@ -214,6 +214,4 @@ const addGoogleAnalytics = (gaId) => {
   fs.writeFileSync(path.join(__dirname, 'src', 'main.ts'), mainTsLines.join(''), { flag: 'r+' });
 };
 
-const configureSignInMethods = (authMethods) => {
-
-};
+const configureSignInMethods = (authMethods) => {};
