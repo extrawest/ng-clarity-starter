@@ -126,27 +126,27 @@ const configureSignInMethods = (authMethods) => {
   let loginTemplateLines = loginTemplate.split('\n');
   loginTemplateLines = loginTemplateLines.map((line, index) => {
     if (line.includes('login-group') && !authMethods.includes('email')) {
-      deleteNextFewLines(loginTemplateLines, index + 1, 25);
+      deleteNextFewLines(loginTemplateLines, index + 1, 26);
     }
 
-    if (line.includes('signInWithGoogle()') && !authMethods.includes('google')) {
+    if (line.includes('loginWithGoogle()') && !authMethods.includes('google')) {
       deleteNextFewLines(loginTemplateLines, index, 4);
       return '';
     }
 
-    if (line.includes('signInWithGithub()') && !authMethods.includes('github')) {
+    if (line.includes('loginWithGithub()') && !authMethods.includes('github')) {
       deleteNextFewLines(loginTemplateLines, index, 4);
       return '';
     }
 
-    if (line.includes('signInWithApple()') && !authMethods.includes('apple')) {
+    if (line.includes('loginWithApple()') && !authMethods.includes('apple')) {
       deleteNextFewLines(loginTemplateLines, index, 4);
       return '';
     }
 
     return line ? line + '\n' : line;
   });
-  fs.writeFileSync('src/app/feature/login/login.component.html', loginTemplateLines.join(''), { flag: 'r+' });
+  fs.writeFileSync('src/app/feature/login/login.component.html', loginTemplateLines.join(''));
 };
 
 const deleteNextFewLines = (lines, lineIndex, numberOfLines) => {
