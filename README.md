@@ -1,6 +1,22 @@
-# NgClarityStarter
+# Angular Clarity Starter
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
+This is a starter project for Angular v15 and Clarity Design System.
+
+## What's included
+
+- Angular v15.2.9
+- Clarity Angular v15.3.0
+- Extrawest Clarity component library
+- Firebase integration with Authentication
+- Refined folder structure
+- Shell, Login, and Dashboard pages
+- Google Analytics integration (optional)
+
+## How to configure it
+
+1. Run `npm start` and follow the instructions.
+2. Configure Firebase in `src/environments/environment.ts` and `src/environments/environment.prod.ts` files.
+3. You're good to go!
 
 ## Development server
 
@@ -25,3 +41,6 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+_Made by Extrawest team._
